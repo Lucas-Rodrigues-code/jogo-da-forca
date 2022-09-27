@@ -23,19 +23,25 @@ export default function App() {
     const [letrasUsadas, setLetrasUsadas] = useState(alfabeto) //letras que ousuario usou 
     const [stringSemAcentos, setStringSemAcentos ] = useState("") // PALAVRA ESCOLHIDA SEM ACENTOS
     const [chute, setChute] = useState("") // estado do input 
-    console.log(letrasUsadas)
+    const [corPalavra, setCorPalavra] = useState("preto")
 
+    
     function inicioJogo() {
         setClicou(false)
         setLetrasUsadas([])
         sortearPalavras()
         setErros(0)
         setChute("")
+        setCorPalavra("preto")
+        
 
     }
 
     function finalizarJogo(){
-        alert("terminou")
+        setLetrasUsadas(alfabeto)
+        setClicou(true)
+        setChute("")
+        setPalavraDoJogo(palavraEscolhida)
     }
 
     function sortearPalavras() {
@@ -70,20 +76,32 @@ console.log(stringSemAcentos)
             
         })
         setPalavraDoJogo(novaPalavradoJogo)
+
+        if(!novaPalavradoJogo.includes(" _")){
+            setCorPalavra("verde")
+            finalizarJogo()
+        }
     }
 
     function errouLetra(l){
         const novaQtdErros = erros + 1
         setErros(novaQtdErros)
+
+        if(novaQtdErros === 6){
+            setCorPalavra("vermelho")
+            finalizarJogo()
+        }
     }
 
     function chutarPalavra(){
         let escolhidaString = ""
         palavraEscolhida.forEach((letra)=> escolhidaString += letra)
         if(chute === escolhidaString ){
-            console.log("ganhou")
+            setCorPalavra("verde")
+            finalizarJogo()
         } else{
             setErros(6)
+            setCorPalavra("vermelho")
             
         }
         finalizarJogo()
@@ -111,7 +129,7 @@ console.log(stringSemAcentos)
             <div className="gameScreen">
                 <img className="imgGallow" src={imagens[erros]} alt="forca" />
                 <div className="secret-word">
-                    <h1>{palavraDojogo}</h1>
+                    <h1 className={corPalavra}>{palavraDojogo}</h1>
 
                 </div>
                 <button className="game-word" onClick={inicioJogo}>Escolher Palavra</button>

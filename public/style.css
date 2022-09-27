@@ -108,3 +108,14 @@ h1 {
 .hide{
     display: none;
 }
+
+
+.verde{
+    color: green;
+}
+.vermelho{
+    color: red;
+}
+.preto{
+    color: black;
+}
