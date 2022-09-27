@@ -20,26 +20,76 @@ export default function App() {
     const [erros, setErros] = useState(0)
     const [palavraEscolhida, setPalavraEscolhida] = useState([]) // plavra sorteada
     const [palavraDojogo, setPalavraDoJogo] = useState([])
+    const [letrasUsadas, setLetrasUsadas] = useState(alfabeto) //letras que ousuario usou 
+    const [stringSemAcentos, setStringSemAcentos ] = useState("") // PALAVRA ESCOLHIDA SEM ACENTOS
+    const [chute, setChute] = useState("") // estado do input 
+    console.log(letrasUsadas)
 
     function inicioJogo() {
         setClicou(false)
+        setLetrasUsadas([])
         sortearPalavras()
+        setErros(0)
+        setChute("")
 
+    }
+
+    function finalizarJogo(){
+        alert("terminou")
     }
 
     function sortearPalavras() {
         const palavra = palavras[Math.floor(Math.random() * palavras.length)];
-        const palavraArray= palavra.split("")
+        const palavraArray = palavra.split("")
         setPalavraEscolhida(palavraArray)
-        console.log(palavraArray)
-
+        
         let tracos = []
-        palavraArray.forEach((letra )=> tracos.push(" _"));
+        palavraArray.forEach((letra) => tracos.push(" _"));
         setPalavraDoJogo(tracos)
+
+        const novaPalavra = palavra.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+        setStringSemAcentos(novaPalavra)
+    }
+console.log(stringSemAcentos)
+    function cliclouLetra(l) {
+        setLetrasUsadas([...letrasUsadas, l])
+        if(stringSemAcentos.includes(l)){
+            acertouLetra(l)
+        } else{
+            errouLetra(l)
+        }
     }
 
 
-// funcçoes de componente 
+    function acertouLetra(l){
+        const novaPalavradoJogo = [...palavraDojogo]
+        palavraEscolhida.forEach((letra,i)=>{
+            if(stringSemAcentos[i]=== l){
+                novaPalavradoJogo[i] =letra
+            }
+            
+        })
+        setPalavraDoJogo(novaPalavradoJogo)
+    }
+
+    function errouLetra(l){
+        const novaQtdErros = erros + 1
+        setErros(novaQtdErros)
+    }
+
+    function chutarPalavra(){
+        let escolhidaString = ""
+        palavraEscolhida.forEach((letra)=> escolhidaString += letra)
+        if(chute === escolhidaString ){
+            console.log("ganhou")
+        } else{
+            setErros(6)
+            
+        }
+        finalizarJogo()
+    }
+
+    // funcçoes de componente 
     function Botao() {
 
 
@@ -47,28 +97,28 @@ export default function App() {
 
         return (
             <div className="words">
-                {alfabeto.map(a => <button key={a} className="abc" disabled={clicou}>{a}</button>)}
+                {alfabeto.map(letra => <button onClick={() => cliclouLetra(letra)} key={letra} className="abc"  disabled={letrasUsadas.includes(letra)}>{letra}</button>)}
             </div>
         )
     }
 
 
 
- 
- 
+
+
     return (
         <>
             <div className="gameScreen">
                 <img className="imgGallow" src={imagens[erros]} alt="forca" />
                 <div className="secret-word">
                     <h1>{palavraDojogo}</h1>
-                
+
                 </div>
                 <button className="game-word" onClick={inicioJogo}>Escolher Palavra</button>
             </div>
             <Botao />
             <div className="answer">
-                <h1>Já sei a palavra !</h1> <input className="input-kick" disabled={clicou} /> <input type="submit" value="Chutar" className="submit" disabled={clicou} />
+                <h1>Já sei a palavra !</h1> <input className="input-kick" disabled={clicou} value={chute} onChange={(e)=> setChute(e.target.value)} /> <input onClick={chutarPalavra} type="submit" value="Chutar" className="submit" disabled={clicou} />
 
             </div>
         </>
