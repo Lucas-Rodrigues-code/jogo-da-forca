@@ -32,7 +32,13 @@ body {
 
 .words {
     display: flex;
-    justify-content: center;
+    flex-wrap: wrap;
+    width: 600px;
+    margin-left: 400px;
+
+    
+
+     
 }
 
 .abc {
@@ -95,5 +101,10 @@ h1 {
     border-bottom: 2px solid black;
     margin-left: 5px;
     width: 10px;
+    display: flex;
 
+}
+
+.hide{
+    display: none;
 }

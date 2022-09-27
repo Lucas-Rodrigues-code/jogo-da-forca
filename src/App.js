@@ -1,58 +1,78 @@
+import { useState } from "react";
+
+import palavras from "./palavras";
+
+import forca0 from "./assets/forca0.png"
+import forca1 from "./assets/forca1.png"
+import forca2 from "./assets/forca2.png"
+import forca3 from "./assets/forca3.png"
+import forca4 from "./assets/forca4.png"
+import forca5 from "./assets/forca5.png"
+import forca6 from "./assets/forca6.png"
+
+
+
+const alfabeto = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
+const imagens = [forca0, forca1, forca2, forca3, forca4, forca5, forca6]
 export default function App() {
 
+    const [clicou, setClicou] = useState(true) //DESABILITA INPUT E BOTOES 
+    const [erros, setErros] = useState(0)
+    const [palavraEscolhida, setPalavraEscolhida] = useState([]) // plavra sorteada
+    const [palavraDojogo, setPalavraDoJogo] = useState([])
+
+    function inicioJogo() {
+        setClicou(false)
+        sortearPalavras()
+
+    }
+
+    function sortearPalavras() {
+        const palavra = palavras[Math.floor(Math.random() * palavras.length)];
+        const palavraArray= palavra.split("")
+        setPalavraEscolhida(palavraArray)
+        console.log(palavraArray)
+
+        let tracos = []
+        palavraArray.forEach((letra )=> tracos.push(" _"));
+        setPalavraDoJogo(tracos)
+    }
+
+
+// funcçoes de componente 
+    function Botao() {
+
+
+
+
+        return (
+            <div className="words">
+                {alfabeto.map(a => <button key={a} className="abc" disabled={clicou}>{a}</button>)}
+            </div>
+        )
+    }
+
+
+
+ 
+ 
     return (
         <>
-            <div class="gameScreen">
-                <img class="imgGallow" src="assets/forca0.png" />
-                <div class="secret-word">
-                    <div class="word"></div>
-                    <div class="word"></div>
-                    <div class="word"></div>
-                    <div class="word"></div>
-                    <div class="word"></div>
-                    <div class="word"></div>
-                    <div class="word"></div>
-                    <div class="word"></div>
-                    <div class="word"></div>
-                    <div class="word"></div>
+            <div className="gameScreen">
+                <img className="imgGallow" src={imagens[erros]} alt="forca" />
+                <div className="secret-word">
+                    <h1>{palavraDojogo}</h1>
+                
                 </div>
-                <button class="game-word">Escolher Palavra</button>
+                <button className="game-word" onClick={inicioJogo}>Escolher Palavra</button>
             </div>
-            <div class="words">
-                <button class="abc">A</button>
-                <button class="abc">b</button>
-                <button class="abc">c</button>
-                <button class="abc">d</button>
-                <button class="abc">e</button>
-                <button class="abc">f</button>
-                <button class="abc">g</button>
-                <button class="abc">h</button>
-                <button class="abc">i</button>
-                <button class="abc">j</button>
-                <button class="abc">k</button>
-                <button class="abc">l</button>
-                <button class="abc">m</button>
-            </div>
-            <div class="words">
-                <button class="abc">n</button>
-                <button class="abc">o</button>
-                <button class="abc">p</button>
-                <button class="abc">q</button>
-                <button class="abc">r</button>
-                <button class="abc">s</button>
-                <button class="abc">t</button>
-                <button class="abc">u</button>
-                <button class="abc">v</button>
-                <button class="abc">w</button>
-                <button class="abc">x</button>
-                <button class="abc">y</button>
-                <button class="abc">z</button>
-            </div>
-            <div class="answer">
-                <h1>Já sei a palavra !</h1> <input class="input-kick" /> <input type="submit" value="Chutar"  class="submit"/>
-                   
+            <Botao />
+            <div className="answer">
+                <h1>Já sei a palavra !</h1> <input className="input-kick" disabled={clicou} /> <input type="submit" value="Chutar" className="submit" disabled={clicou} />
+
             </div>
         </>
 
     )
 }
+
